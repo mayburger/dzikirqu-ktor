@@ -18,11 +18,12 @@ val bookStorage = database.getCollection<Book>() //KMongo extension method
 class Book(
     @Contextual val id: Id<Book> = newId(),
     var title: ArrayList<LanguageString>? = ArrayList(),
+    var description: ArrayList<LanguageString>? = ArrayList(),
     var type: String? = "prayer"
-)  {
+) {
     @Serializable
     class LanguageString(
-        var text:String?=null,
-        var language:String?=null
+        var text: String? = null,
+        var language: String? = null
     )
 }
