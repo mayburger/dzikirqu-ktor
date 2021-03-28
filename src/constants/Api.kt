@@ -5,7 +5,8 @@ import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
 
 object Api {
-    const val BASE_API = "mongodb://127.0.0.1:27017"
+//    const val BASE_API = "mongodb://127.0.0.1:27017"
+    const val BASE_API = "mongodb+srv://admin:dBsr6gT153c0pg4C@dzikirqu.dtvxs.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 
     fun getClient():CoroutineClient{
         return KMongo.createClient(BASE_API).coroutine
