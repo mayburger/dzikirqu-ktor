@@ -8,7 +8,9 @@ import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.litote.kmongo.MongoOperator
 import org.litote.kmongo.eq
+import org.litote.kmongo.setValue
 import java.lang.Exception
 
 
@@ -21,6 +23,14 @@ fun Application.registerPrayerRoutes() {
 
 fun Route.prayerDataRouting(){
     route("/prayer/data"){
+        patch{
+            try {
+                prayerDataStorage.drop()
+                call.respondText("Prayers stored correctly", status = HttpStatusCode.Accepted)
+            } catch (e: Exception) {
+                call.respondText("Error ${e.message}", status = HttpStatusCode.BadRequest)
+            }
+        }
         post("/bulk"){
             try {
                 val prayers = call.receive<ArrayList<Prayer.PrayerData>>()
@@ -30,8 +40,25 @@ fun Route.prayerDataRouting(){
                 call.respondText("Error ${e.message}", status = HttpStatusCode.BadRequest)
             }
         }
+        patch("/notes"){
+            try{
+                val prayer = call.receive<Prayer.PrayerData>()
+                if (prayer.notes?.isNullOrEmpty() == true){
+                    call.respondText("Error, empty notes", status = HttpStatusCode.BadRequest)
+                    return@patch
+                }
+                prayerDataStorage.updateOne(Prayer.PrayerData::id eq prayer.id, setValue(Prayer.PrayerData::notes, prayer.notes))
+                call.respondText("Notes updated", status = HttpStatusCode.Accepted)
+            }catch (e:Exception){
+                call.respondText("Error ${e.message}", status = HttpStatusCode.BadRequest)
+            }
+        }
         get{
-            call.respond(prayerDataStorage.find().toList())
+            try{
+                call.respond(prayerDataStorage.find().toList())
+            }catch (e:Exception){
+                call.respondText("Error ${e.message}", status = HttpStatusCode.BadRequest)
+            }
         }
         get("/{prayer_id}"){
             val id = call.parameters["prayer_id"]

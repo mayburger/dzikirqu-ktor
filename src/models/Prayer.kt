@@ -25,8 +25,18 @@ class Prayer(
         var order:Int?=null,
         var text:ArrayList<LanguageString>?=null,
         var source: ArrayList<LanguageString>? = null,
-        var notes: String? = null,
-        var audio: String? = null
+        var notes: ArrayList<LanguageString>? = null,
+        var audio: String? = null,
+        var link: Link? = null
+    )
+
+    @Serializable
+    class Link(
+        val title:ArrayList<LanguageString>?=null,
+        val subtitle:ArrayList<LanguageString>?=null,
+        val description: String?=null,
+        val type: String?=null,
+        val link:String?=null
     )
 
     @Serializable
